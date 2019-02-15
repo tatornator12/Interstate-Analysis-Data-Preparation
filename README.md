@@ -2,7 +2,7 @@
 
 Geoprocessing Tool created as part of a project to prepare nation-wide interstate HPMS (<a href="https://www.fhwa.dot.gov/policyinformation/hpms.cfm">Highway Performance Monitoring System</a>) and FARS (<a href="https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars">Fatality Analysis Reporting System</a>) data on a yearly basis for further analysis.
 
-The steps of the tool are as follows:
+### The steps of the tool are as follows:
 
 1. Take inputs for HPMS and FARS feature classes
 2. Extract out features associated with interstates,
