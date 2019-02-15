@@ -8,4 +8,4 @@ Geoprocessing tool created as part of a project to prepare nation-wide interstat
 2. Extract out features associated with interstates
 3. Create a point feature class representation for each state from the HPMS input
 4. Associate the closest FARS crash to the road point
-5. Calculate three crash rates using the crash counts and AADT (Annual Average Daily Traffic) values. The tool also requires an output workspace where each state road point dataset will be written to using the state code extracted from the HPMS input.
+5. Calculate three crash rates using the crash counts and AADT (<a href="https://www.fhwa.dot.gov/policyinformation/travel_monitoring/pubs/aadt/">Annual Average Daily Traffic</a>) values. The tool also requires an output workspace where each state road point dataset will be written to using the state code extracted from the HPMS input.
