@@ -1,6 +1,6 @@
 # Interstate Analysis Data Preparation
 
-Geoprocessing Tool Purpose:
+Geoprocessing Tool created to prepare nation-wide interstate HPMS (<a href="https://www.fhwa.dot.gov/policyinformation/hpms.cfm">Highway Performance Monitoring System</a>) and FARS data for further analysis:
 
 * Take inputs for HPMS and FARS feature classes
 * Extract out features associated with interstates,
