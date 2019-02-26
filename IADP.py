@@ -1,3 +1,14 @@
+# Name: InterstateAnalysisDataPreparation.py
+# Purpose: (1) Take inputs for HPMS and FARS feature classes, (2) extract out features associated with interstates,
+# (3) create a point feature class representation for each state from the HPMS input, (4) associate the closest FARS
+# crash to the road point, and (5) calculate three crash rates using the crash counts and AADT (Annual Average Daily
+# Traffic) values. The tool also requires an output workspace where each state road point dataset will be written to
+# using the state code extracted from the HPMS input.
+# Author: Taylor Teske
+# Last Modified: 2/26/2019
+# Python Version:   3.6
+# ---------------------------------------------
+
 # Import Modules
 import os
 import arcpy
@@ -24,7 +35,7 @@ def hpmsFilter(hpms_fc):
         HPMS_fields = arcpy.ListFields(hpms_fc)
         for field in HPMS_fields:
             if 'f_system' in field.name.lower():
-                hpmsFSystemExp = field.name + " = 1"
+                hpmsFSystemExp = field.name + " = 1 AND route_numb <> 0"
                 arcpy.MakeFeatureLayer_management(hpms_fc, 'HPMS_F_System_lyr')
                 arcpy.SelectLayerByAttribute_management('HPMS_F_System_lyr', "NEW_SELECTION", hpmsFSystemExp)
                 arcpy.CopyFeatures_management('HPMS_F_System_lyr', memDB + "\HPMS_F_System_1")
@@ -163,7 +174,7 @@ def dataPrep(merge_fc, hpms_fc, near_dist, linear_unit):
                         arcpy.CalculateField_management(memDB + '\FARS_Filtered_{0}_{1}'.format(state, interstate),
                                                         'NEAR_DIST', f_exp, 'PYTHON3', None)
 
-                arcpy.CopyFeatures_management(memDB + '\FARS_Filtered_{0}_{1}'.format(state, interstate), out_workspace + '\FARS_Filtered_{0}_{1}'.format(state, interstate))
+                arcpy.CopyFeatures_management(memDB + '\FARS_Filtered_{0}_{1}'.format(state, interstate), memDB + '\FARS_Filtered_{0}_{1}'.format(state, interstate))
 
                 # Select All Crashes within Specified Distance
                 arcpy.MakeFeatureLayer_management(memDB + '\FARS_Filtered_{0}_{1}'.format(state, interstate),
@@ -210,7 +221,7 @@ def dataPrep(merge_fc, hpms_fc, near_dist, linear_unit):
             arcpy.DeleteField_management(merge_fc + "_{}".format(state), ['Join_Count', 'TARGET_FID'])
 
             # Clear In Memory Database
-            arcpy.Delete_management("in_memory")
+            arcpy.Delete_management(memDB)
 
             arcpy.AddMessage(hpms_fc + "_{}".format(state) + " has completed.")
             arcpy.AddMessage("-------------------------------")
