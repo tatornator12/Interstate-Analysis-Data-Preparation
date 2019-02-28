@@ -5,7 +5,7 @@
 # Traffic) values. The tool also requires an output workspace where each state road point dataset will be written to
 # using the state code extracted from the HPMS input.
 # Author: Taylor Teske
-# Last Modified: 2/26/2019
+# Last Modified: 2/28/2019
 # Python Version:   3.6
 # ---------------------------------------------
 
@@ -107,9 +107,15 @@ def dataPrep(merge_fc, hpms_fc, near_dist, linear_unit):
 
             # Loop Through Each Route in List
             for interstate in int_list:
+                
                 # Prepare Expressions for Selection
                 hpmsInterstateExp = "route_numb = {}".format(interstate)
-                farsInterstateExp = "tway_id LIKE '%I-{}%'".format(interstate)
+
+                # Determine if the state is Alaska, as Alaska does not use 'I' as an identifier
+                if state == 2:
+                    farsInterstateExp = "tway_id LIKE '%SR-{}%'".format(interstate)
+                else:
+                    farsInterstateExp = "tway_id LIKE '%I-{}%'".format(interstate)
 
                 # Create Feature Layers
                 arcpy.MakeFeatureLayer_management(memDB + "\HPMS_{}".format(state), "HPMS_{}_lyr".format(state))
@@ -173,8 +179,6 @@ def dataPrep(merge_fc, hpms_fc, near_dist, linear_unit):
                         f_exp = '!NEAR_DIST! * 3.2808'
                         arcpy.CalculateField_management(memDB + '\FARS_Filtered_{0}_{1}'.format(state, interstate),
                                                         'NEAR_DIST', f_exp, 'PYTHON3', None)
-
-                arcpy.CopyFeatures_management(memDB + '\FARS_Filtered_{0}_{1}'.format(state, interstate), memDB + '\FARS_Filtered_{0}_{1}'.format(state, interstate))
 
                 # Select All Crashes within Specified Distance
                 arcpy.MakeFeatureLayer_management(memDB + '\FARS_Filtered_{0}_{1}'.format(state, interstate),
@@ -263,3 +267,5 @@ if __name__ == "__main__":
     hpmsFilter(HPMS_featureclass)
     farsFilter(FARS_featureclass)
     dataPrep(merge_featureclass, HPMS_featureclass, crash_distance, in_linear_unit)
+
+
